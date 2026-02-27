@@ -19,6 +19,10 @@ export default class GuestEntryFormComponent extends NavigationMixin(LightningEl
     city = '';
     hotelType = '';
 
+      todayDate = new Date().toISOString().split('T')[0];
+      
+    dateError = '';
+
 
     cityOptions = [
     { label: 'Bangalore', value: 'Bangalore' },
@@ -67,6 +71,22 @@ export default class GuestEntryFormComponent extends NavigationMixin(LightningEl
 }
 
 handleNext(){
+  this.dateError = '';
+
+   
+    if(!this.checkIn || !this.checkOut){
+        this.dateError = 'Please select both Check-In and Check-Out dates';
+        return;
+    }
+
+    
+    const checkInDate = new Date(this.checkIn);
+    const checkOutDate = new Date(this.checkOut);
+
+    if(checkOutDate <= checkInDate){
+        this.dateError = 'Check-Out date must be after Check-In date';
+        return;
+    }
 
     saveGuest({
             firstName:this.firstName,

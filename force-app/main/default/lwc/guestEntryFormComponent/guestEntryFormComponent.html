@@ -39,6 +39,7 @@
 
             <lightning-input type="date" label="Check-In Date"
                 data-field="checkIn"
+                min={todayDate}
                 onchange={handleChange} required>
             </lightning-input>
 
@@ -46,6 +47,11 @@
                 data-field="checkOut"
                 onchange={handleChange} required>
             </lightning-input>
+            <template if:true={dateError}>
+    <div class="slds-text-color_error slds-text-body_small">
+        {dateError}
+    </div>
+</template>
 
             <lightning-combobox 
                 label="Hotel City"

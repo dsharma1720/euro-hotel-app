@@ -6,17 +6,28 @@
             <lightning-input
                 label="Card Number"
                 data-field="cardNumber"
+                 type="number"
                 onchange={handleChange}
                 required>
             </lightning-input>
+            <template if:true={cardError}>
+    <div class="slds-text-color_error slds-text-body_small">
+        {cardError}
+    </div>
+</template>
 
             <lightning-input
                 label="CVV"
                 data-field="cvv"
+                 type="number"
                 onchange={handleChange}
                 required>
             </lightning-input>
-
+<template if:true={cvvError}>
+    <div class="slds-text-color_error slds-text-body_small">
+        {cvvError}
+    </div>
+</template>
             <lightning-combobox
                 label="Expiry Month"
                 data-field="expiryMonth"
@@ -25,6 +36,11 @@
                 onchange={handleChange}
                 required>
             </lightning-combobox>
+            <template if:true={monthError}>
+    <div class="slds-text-color_error slds-text-body_small">
+        {monthError}
+    </div>
+</template>
 
             <lightning-combobox
                 label="Expiry Year"
@@ -34,6 +50,11 @@
                 onchange={handleChange}
                 required>
             </lightning-combobox>
+            <template if:true={yearError}>
+    <div class="slds-text-color_error slds-text-body_small">
+        {yearError}
+    </div>
+</template>
 
             <br/>
 

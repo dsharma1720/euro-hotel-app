@@ -10,6 +10,10 @@ export default class PaymentInfoComponent extends NavigationMixin(LightningEleme
     expiryMonth;
     expiryYear;
     guestId;
+    cardError = '';
+    cvvError = '';
+    monthError = '';
+    yearError = '';
 
     monthOptions = [
         { label: 'January', value: 'January' },
@@ -57,6 +61,58 @@ export default class PaymentInfoComponent extends NavigationMixin(LightningEleme
 
     handleSubmit(){
          console.log("GuestId:", this.guestId);
+         this.cardError = '';
+    this.cvvError = '';
+    this.monthError = '';
+    this.yearError = '';
+
+    let isValid = true;
+
+   
+    if(!this.cardNumber){
+        this.cardError = 'Card number is required';
+        isValid = false;
+    }
+    else if(!/^[0-9]+$/.test(this.cardNumber)){
+        this.cardError = 'Card number must contain only digits';
+        isValid = false;
+    }
+    else if(this.cardNumber.length !== 12){
+        this.cardError = 'Card number must be 12 digits';
+        isValid = false;
+    }
+
+  
+    if(!this.cvv){
+        this.cvvError = 'CVV is required';
+        isValid = false;
+    }
+    else if(!/^[0-9]+$/.test(this.cvv)){
+        this.cvvError = 'CVV must contain only digits';
+        isValid = false;
+    }
+    else if(this.cvv.length !== 3){
+        this.cvvError = 'CVV must be 3 digits';
+        isValid = false;
+    }
+
+
+    if(!this.expiryMonth){
+        this.monthError = 'Select expiry month';
+        isValid = false;
+    }
+
+   
+    if(!this.expiryYear){
+        this.yearError = 'Select expiry year';
+        isValid = false;
+    }
+
+    
+    if(!isValid){
+        return;
+    }
+
         savePayment({
             cardNumber:this.cardNumber,
             cvv:this.cvv,
