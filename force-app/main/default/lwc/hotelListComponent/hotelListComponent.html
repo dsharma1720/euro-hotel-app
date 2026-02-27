@@ -2,7 +2,12 @@
     <lightning-card title="Hotel Lists">
         <div class="slds-p-around_medium">
 
-           
+            <template if:true={isGuestMissing}>
+                <div class="slds-text-color_error slds-m-bottom_small">
+                    Please fill Guest Form to select a hotel
+                </div>
+            </template>
+            
             <template if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading hotels"></lightning-spinner>
             </template>
@@ -24,7 +29,8 @@
                                     <input type="radio"
                                            name="hotel"
                                            data-index={index}
-                                           onchange={handleSelect}/>
+                                           onchange={handleSelect}
+                                           disabled={isGuestMissing}/>
 
                                     <span class="slds-radio_faux"></span>
 

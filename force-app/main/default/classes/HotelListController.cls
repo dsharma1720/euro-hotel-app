@@ -6,18 +6,23 @@ public with sharing class HotelListController {
         System.debug('CITY = ' + city);
         System.debug('TYPE = ' + type);
 
-        List<Hotel_Master__c> hotels = [
-            SELECT Id,
-                   Name,
-                   Hotel_City__c,
-                   Hotel_Type__c,
-                   Per_Day_Cost__c,
-                   WiFi_Availability__c,
-                   Cash_Pay_Availability__c,
-                   Cancellation_Availability__c
-            FROM Hotel_Master__c
- WHERE Hotel_City__c = :city AND Hotel_Type__c = :type
-        ];
+       
+ List<Hotel_Master__c> hotels;
+
+if(String.isBlank(city) && String.isBlank(type)){
+    hotels = [SELECT Id, Name, Hotel_City__c, Hotel_Type__c,
+                     Per_Day_Cost__c, WiFi_Availability__c,
+                     Cash_Pay_Availability__c, Cancellation_Availability__c
+              FROM Hotel_Master__c LIMIT 10];
+}
+else{
+    hotels = [SELECT Id, Name, Hotel_City__c, Hotel_Type__c,
+                     Per_Day_Cost__c, WiFi_Availability__c,
+                     Cash_Pay_Availability__c, Cancellation_Availability__c
+              FROM Hotel_Master__c
+              WHERE Hotel_City__c = :city
+              AND Hotel_Type__c = :type];
+}
 
         System.debug('HOTELS FOUND = ' + hotels.size());
 

@@ -11,25 +11,28 @@ export default class HotelListComponent extends NavigationMixin(LightningElement
     selectedHotel;
     isLoading = false;
     error;
+    guestId = '';
 
   @wire(CurrentPageReference)
 getStateParameters(pageRef){
     if(pageRef && pageRef.state){
 
-        this.city = pageRef.state.c__city;
-        this.type = pageRef.state.c__type;
-        this.guestId = pageRef.state.c__guestId;
+        this.city = pageRef.state.c__city|| '';
+        this.type = pageRef.state.c__type|| '';
+        this.guestId = pageRef.state.c__guestId|| '';
 
         console.log('STATE VALUES => ', this.city, this.type);
 
     
-        if(this.city && this.type){
+       
             this.loadHotels();
-        }
+        
     }
 }
 
- 
+ get isGuestMissing(){
+    return !this.guestId;
+}
     loadHotels(){
         this.isLoading = true;
 
@@ -59,6 +62,10 @@ getStateParameters(pageRef){
     
     handleConfirm(){
 
+    if(!this.guestId){
+        this.showToast('Error','Please fill Guest Form first','error');
+        return;
+    }
         console.log('Confirm clicked');
         console.log('SelectedHotel:', this.selectedHotel);
 
@@ -92,4 +99,14 @@ getStateParameters(pageRef){
             }
         });
     }
+     showToast(title, message, variant){
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant
+            })
+        );
+    }
+
 }
