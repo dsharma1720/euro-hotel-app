@@ -1,6 +1,11 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import saveGuest from '@salesforce/apex/GuestEntryController.saveGuest';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+
+import HOTEL_OBJECT from '@salesforce/schema/Hotel_Master__c';
+import CITY_FIELD from '@salesforce/schema/Hotel_Master__c.Hotel_City__c';
+import TYPE_FIELD from '@salesforce/schema/Hotel_Master__c.Hotel_Type__c';
 
 
 export default class GuestEntryFormComponent extends NavigationMixin(LightningElement){
@@ -19,35 +24,39 @@ export default class GuestEntryFormComponent extends NavigationMixin(LightningEl
     city = '';
     hotelType = '';
 
-      todayDate = new Date().toISOString().split('T')[0];
+    cityOptions = [];
+    hotelOptions = [];
+
+    todayDate = new Date().toISOString().split('T')[0];
       
     dateError = '';
 
+@wire(getObjectInfo, { objectApiName: HOTEL_OBJECT })
+objectInfo;
 
-    cityOptions = [
-    { label: 'Bangalore', value: 'Bangalore' },
-    { label: 'Mumbai', value: 'Mumbai' },
-    { label: 'Delhi', value: 'Delhi' },
-    { label: 'Hyderabad', value: 'Hyderabad' },
-    { label: 'Chennai', value: 'Chennai' },
-    { label: 'Kolkata', value: 'Kolkata' },
-    { label: 'Pune', value: 'Pune' },
-    { label: 'Jaipur', value: 'Jaipur' },
-    { label: 'Goa', value: 'Goa' },
-    { label: 'Kochi', value: 'Kochi' },
-    { label: 'Udaipur', value: 'Udaipur' },
-    { label: 'Ahmedabad', value: 'Ahmedabad' },
-    { label: 'Chandigarh', value: 'Chandigarh' },
-    { label: 'Varanasi', value: 'Varanasi' },
-    { label: 'Shimla', value: 'Shimla' },
-    { label: 'Manali', value: 'Manali' }
-];
-    hotelOptions = [
-        { label:'3 Star', value:'3 Star'},
-        { label:'4 Star', value:'4 Star'},
-        { label:'5 Star', value:'5 Star'}
-    ];
-
+@wire(getPicklistValues, {
+    recordTypeId: '$objectInfo.data.defaultRecordTypeId',
+    fieldApiName: CITY_FIELD
+})
+cityPicklist({ data, error }) {
+    if (data) {
+        this.cityOptions = data.values;
+    }else if (error) {
+            console.error('City Picklist Error', error);
+    }
+}
+@wire(getPicklistValues, {
+    recordTypeId: '$objectInfo.data.defaultRecordTypeId',
+    fieldApiName: TYPE_FIELD
+})
+typePicklist({ data, error }) {
+    if (data) {
+        this.hotelOptions = data.values;
+    }else if (error) {
+            console.error('Type Picklist Error', error);
+        }
+}
+   
     
     handleChange(event) {
 
